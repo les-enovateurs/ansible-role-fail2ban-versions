@@ -1,0 +1,6 @@
+---
+# tasks file for fail2ban-versions
+
+- name:
+        - git:
+                repo: 'https://github.com/fail2ban/fail2ban.git'
