@@ -3,3 +3,10 @@
   hosts: all
   roles:
     - role: fail2ban-versions
+
+  post_tasks:
+    - name: Confirm fail2ban has the good branch
+      shell: "git branch | grep -F '{{ version }}'"
+      changed_when: false
+      args:
+        chdir: /tmp/git-project/fail2ban/

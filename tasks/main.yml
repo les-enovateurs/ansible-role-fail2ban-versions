@@ -14,3 +14,8 @@
     repo: 'https://github.com/fail2ban/fail2ban.git'
     dest: /tmp/git-project/
     version: "{{ version }}"
+
+- name: Execute Script
+  command: python setup.py
+  args:
+    chdir: /tmp/git-project/
