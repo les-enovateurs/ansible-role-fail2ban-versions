@@ -1,6 +1,16 @@
 ---
 # tasks file for fail2ban-versions
+- name: Get aptitude for upgrade
+  apt: pkg=aptitude state=present
 
-- name:
-        - git:
-                repo: 'https://github.com/fail2ban/fail2ban.git'
+- name: "Install dependencies"
+  apt:
+    pkg:
+      - git-all
+    state: present
+
+- name: Git clone fail2ban
+  git:
+    repo: 'https://github.com/fail2ban/fail2ban.git'
+    dest: /tmp/git-project/
+    version: "{{ version }}"
