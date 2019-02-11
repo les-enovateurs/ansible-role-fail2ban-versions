@@ -5,8 +5,8 @@
     - role: fail2ban-versions
 
   post_tasks:
-    - name: Confirm fail2ban has the good branch
-      shell: "git branch | grep -F '{{ version }}'"
+    - name: Check fail2ban-client works
+      command: "fail2ban-client"
       changed_when: false
-      args:
-        chdir: /tmp/git-project/fail2ban/
+#      args:
+#        chdir: /tmp/git-project/fail2ban/

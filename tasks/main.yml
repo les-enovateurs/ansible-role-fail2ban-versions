@@ -16,6 +16,7 @@
     version: "{{ version }}"
 
 - name: Execute Script
-  command: python setup.py
+  script: setup.py install
   args:
-    chdir: /tmp/git-project/
+    chdir: /tmp/git-project/fail2ban/
+    executable: python
