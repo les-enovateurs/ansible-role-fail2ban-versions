@@ -6,7 +6,10 @@
 
   post_tasks:
     - name: Check fail2ban-client works
-      command: "fail2ban-client"
+      command: "fail2ban-client --version | grep -F '{{ fail2ban_version }}'"
       changed_when: false
-#      args:
-#        chdir: /tmp/git-project/fail2ban/
+
+    - name: Check extension every plugins install
+      command: "fail2ban-client status {{ item }}"
+      changed_when: false
+      loop: "{{ fail2ban_plugins }}"

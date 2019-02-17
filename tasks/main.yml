@@ -13,10 +13,45 @@
   git:
     repo: 'https://github.com/fail2ban/fail2ban.git'
     dest: /tmp/git-project/
-    version: "{{ version }}"
+    version: "{{ fail2ban_version }}"
+  changed_when: false
 
 - name: Execute Script
-  script: setup.py install
+  command: '/usr/bin/python /tmp/git-project/setup.py install'
+  changed_when: false
   args:
-    chdir: /tmp/git-project/fail2ban/
-    executable: python
+    chdir: /tmp/git-project/
+
+# install defaults configuration
+- name: Install global configuration of fail2ban
+  template:
+    src: templates/defaults-settings.j2
+    dest: /etc/fail2ban/jail.d/defaults-settings.conf
+
+# install all plugin choosen by fail2ban_plugins
+- name: Install plugin choosen
+  template:
+    src: templates/filters/{{ item }}.conf
+    dest: /etc/fail2ban/filter.d/{{ item }}.conf
+  loop: "{{ fail2ban_plugins }}"
+
+# start fail2ban if it is not started
+- name: Check status of fail2ban
+  command: fail2ban-client status
+  register: result_fail2ban_client
+  ignore_errors: true
+  changed_when: false
+
+- name: Start fail2ban-client
+  command: '/usr/local/bin/fail2ban-client start'
+  when: result_fail2ban_client is failed
+
+- name: Clean clone directory tmp fail2ban repository
+  file:
+    state: absent
+    path: "/tmp/git-project/"
+  changed_when: false
+
+# fail2ban-client start
+# fail2ban-client status to test
+#  when: "'wordpress-xmlrpc' in fail2ban_plugins"
