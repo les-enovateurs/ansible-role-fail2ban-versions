@@ -1,0 +1,19 @@
+[DEFAULT]
+ignoreip = {{ defaults_settings_config.ignoreip }}
+ 
+# 1 jour de bannissement pour tous les plugins
+bantime = {{ defaults_settings_config.bantime }}
+# Un hôte est banni si il a généré “maxretry” pendant les dernières “findtime”
+# seconds.
+findtime = {{ defaults_settings_config.findtime }}
+
+ 
+# “maxretry” est le nombre d'échec avant qu'un hôte soit banni.
+maxretry = {{ defaults_settings_config.maxretry }}
+
+{% for fail2ban_plugin in fail2ban_plugins %}
+[{{ fail2ban_plugin }}]
+{% for name in vars[fail2ban_plugin + '_config'] %}
+{{ name }} = {{ vars[fail2ban_plugin + '_config'][name] }}
+{% endfor %}
+{% endfor %}
