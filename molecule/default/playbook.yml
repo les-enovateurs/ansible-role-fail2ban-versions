@@ -2,11 +2,97 @@
 - name: Converge
   hosts: all
   roles:
-    - role: fail2ban-versions
+    - fail2ban-versions
+
+  vars:
+    # fail2ban
+    - fail2ban_plugins:
+        - wordpress-xmlrpc-apache
+        # - sshd
+        # - dropbear
+        # - selinux-ssh
+        - apache-auth
+        - apache-badbots
+        - apache-noscript
+        - apache-overflows
+        - apache-nohome
+        - apache-botsearch
+        - apache-fakegooglebot
+        - apache-modsecurity
+        - apache-shellshock
+        # - openhab-auth
+        # - nginx-http-auth
+        # - nginx-limit-req
+        # - nginx-botsearch
+        # - php-url-fopen
+        # - suhosin
+        # - lighttpd-auth
+        # - roundcube-auth
+        # - openwebmail
+        # - horde
+        # - groupoffice
+        # - sogo-auth
+        # - tine20
+        # - drupal-auth
+        # - guacamole
+        # - monit
+        # - webmin-auth
+        # - froxlor-auth
+        # - squid
+        # - 3proxy
+        # - proftpd
+        # - pure-ftpd
+        # - gssftpd
+        # - wuftpd
+        # - vsftpd
+        # - assp
+        # - courier-smtp
+        # - postfix
+        # - postfix-rbl
+        # - sendmail-auth
+        # - sendmail-reject
+        # - qmail-rbl
+        # - dovecot
+        # - sieve
+        # - solid-pop3d
+        # - exim
+        # - exim-spam
+        # - kerio
+        # - courier-auth
+        # - postfix-sasl
+        # - perdition
+        # - squirrelmail
+        # - cyrus-imap
+        # - uwimap-auth
+        # - named-refused
+        # - nsd
+        # - asterisk
+        # - freeswitch
+        # - mysqld-auth
+        # - mongodb-auth
+        # - recidive
+        # - pam-generic
+        # - xinetd-fail
+        # - stunnel
+        # - ejabberd-auth
+        # - counter-strike
+        # - nagios
+        # - oracleims
+        # - directadmin
+        # - portsentry
+        # - pass2allow-ftp
+        # - murmur
+        # - slapd
+        # - domino-smtp
+        # - phpmyadmin-syslog
+        - zoneminder
 
   post_tasks:
     - name: Check fail2ban-client works
-      command: "fail2ban-client"
+      command: "fail2ban-client --version | grep -F '{{ fail2ban_version }}'"
       changed_when: false
-#      args:
-#        chdir: /tmp/git-project/fail2ban/
+
+    - name: Check extension every plugins install
+      command: "fail2ban-client status {{ item }}"
+      changed_when: false
+      loop: "{{ fail2ban_plugins }}"
