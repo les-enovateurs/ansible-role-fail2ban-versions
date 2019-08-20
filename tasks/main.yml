@@ -1,7 +1,9 @@
 ---
 # tasks file for fail2ban-versions
-- name: Get aptitude for upgrade
-  apt: pkg=aptitude state=present
+- name: "Update APT"
+  apt:
+    name: aptitude
+    force_apt_get: "yes"
 
 - name: "Install dependencies"
   apt:
